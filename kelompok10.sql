@@ -1,5 +1,3 @@
-
--- Table: CABANG
 CREATE TABLE CABANG (
     ID_Cabang INT PRIMARY KEY,
     Nama_Cabang VARCHAR(100),
@@ -9,7 +7,6 @@ CREATE TABLE CABANG (
     Jam_Operasional VARCHAR(50)
 );
 
--- Table: STUDIO
 CREATE TABLE STUDIO (
     ID_Studio INT PRIMARY KEY,
     Nomor_Studio VARCHAR(10),
@@ -19,7 +16,6 @@ CREATE TABLE STUDIO (
     FOREIGN KEY (ID_Cabang) REFERENCES CABANG(ID_Cabang)
 );
 
--- Table: KURSI
 CREATE TABLE KURSI (
     ID_Kursi INT PRIMARY KEY,
     Nomor_Kursi VARCHAR(10),
@@ -29,7 +25,6 @@ CREATE TABLE KURSI (
     FOREIGN KEY (ID_Studio) REFERENCES STUDIO(ID_Studio)
 );
 
--- Table: USER
 CREATE TABLE USER (
     ID_User INT PRIMARY KEY,
     Nama VARCHAR(100),
@@ -38,7 +33,6 @@ CREATE TABLE USER (
     Kata_Sandi VARCHAR(100)
 );
 
--- Table: ADMIN
 CREATE TABLE ADMIN (
     ID_User INT PRIMARY KEY,
     Alamat TEXT,
@@ -48,7 +42,6 @@ CREATE TABLE ADMIN (
     FOREIGN KEY (ID_Cabang) REFERENCES CABANG(ID_Cabang)
 );
 
--- Table: MEMBER
 CREATE TABLE MEMBER (
     ID_User INT PRIMARY KEY,
     Status_Keanggotaan VARCHAR(50),
@@ -56,7 +49,6 @@ CREATE TABLE MEMBER (
     FOREIGN KEY (ID_User) REFERENCES USER(ID_User)
 );
 
--- Table: FILM
 CREATE TABLE FILM (
     ID_Film INT PRIMARY KEY,
     Judul_Film VARCHAR(100),
@@ -64,13 +56,11 @@ CREATE TABLE FILM (
     Pangkat_Usia VARCHAR(20)
 );
 
--- Table: GENRE
 CREATE TABLE GENRE (
     ID_Genre INT PRIMARY KEY,
     Jenis_Genre VARCHAR(50)
 );
 
--- Table: MEMILIKI
 CREATE TABLE MEMILIKI (
     ID_Genre INT,
     ID_Film INT,
@@ -79,7 +69,6 @@ CREATE TABLE MEMILIKI (
     FOREIGN KEY (ID_Film) REFERENCES FILM(ID_Film)
 );
 
--- Table: TIKET
 CREATE TABLE TIKET (
     ID_TIKET INT PRIMARY KEY,
     Harga_Tiket DECIMAL(10,2),
@@ -90,7 +79,6 @@ CREATE TABLE TIKET (
     FOREIGN KEY (ID_Film) REFERENCES FILM(ID_Film)
 );
 
--- Table: JADWAL_TAYANG
 CREATE TABLE JADWAL_TAYANG (
     ID_Jadwal_Tayang INT PRIMARY KEY,
     Jam_Mulai TIME,
@@ -100,7 +88,6 @@ CREATE TABLE JADWAL_TAYANG (
     FOREIGN KEY (ID_TIKET) REFERENCES TIKET(ID_TIKET)
 );
 
--- Table: TRANSAKSI
 CREATE TABLE TRANSAKSI (
     ID_Transaksi INT PRIMARY KEY,
     Tanggal_Transaksi DATE,
@@ -115,13 +102,11 @@ CREATE TABLE TRANSAKSI (
     FOREIGN KEY (ID_TIKET) REFERENCES TIKET(ID_TIKET)
 );
 
-
--- DML Inserts Below --
-
 INSERT INTO CABANG (ID_Cabang, Nama_Cabang, Alamat_Cabang, Kota, Jumlah_Studio, Jam_Operasional) VALUES
 (1, 'Cabang Jakarta', 'Jl. Sudirman No.1', 'Jakarta', 5, '10:00 - 22:00'),
 (2, 'Cabang Bandung', 'Jl. Asia Afrika No.2', 'Bandung', 3, '11:00 - 21:00'),
 (3, 'Cabang Surabaya', 'Jl. Pemuda No.3', 'Surabaya', 4, '10:00 - 23:00');
+
 INSERT INTO STUDIO (ID_Studio, Nomor_Studio, Kapasitas_Kursi, Tipe_Studio, ID_Cabang) VALUES
 (1, 'S1', 100, 'Reguler', 1),
 (2, 'S2', 110, 'Reguler', 2),
@@ -133,6 +118,7 @@ INSERT INTO STUDIO (ID_Studio, Nomor_Studio, Kapasitas_Kursi, Tipe_Studio, ID_Ca
 (8, 'S8', 170, 'Reguler', 2),
 (9, 'S9', 180, 'Reguler', 3),
 (10, 'S10', 190, 'Reguler', 1);
+
 INSERT INTO KURSI (ID_Kursi, Nomor_Kursi, Jenis_Kursi, Status_Kursi, ID_Studio) VALUES
 (1, 'A1', 'Reguler', 'Tersedia', 1),
 (2, 'A2', 'Reguler', 'Tersedia', 2),
@@ -164,6 +150,7 @@ INSERT INTO KURSI (ID_Kursi, Nomor_Kursi, Jenis_Kursi, Status_Kursi, ID_Studio) 
 (28, 'A28', 'Reguler', 'Tersedia', 8),
 (29, 'A29', 'Reguler', 'Tersedia', 9),
 (30, 'A30', 'Reguler', 'Tersedia', 10);
+
 INSERT INTO USER (ID_User, Nama, Email, Nomor_Telepon, Kata_Sandi) VALUES
 (1, 'User1', 'user1@mail.com', '08123456780', 'password123'),
 (2, 'User2', 'user2@mail.com', '08123456781', 'password123'),
@@ -175,33 +162,39 @@ INSERT INTO USER (ID_User, Nama, Email, Nomor_Telepon, Kata_Sandi) VALUES
 (8, 'User8', 'user8@mail.com', '08123456787', 'password123'),
 (9, 'User9', 'user9@mail.com', '08123456788', 'password123'),
 (10, 'User10', 'user10@mail.com', '08123456789', 'password123');
+
 INSERT INTO ADMIN (ID_User, Alamat, Gaji, ID_Cabang) VALUES
 (1, 'Jl. Admin 0', 5000000, 1),
 (2, 'Jl. Admin 1', 5100000, 2),
 (3, 'Jl. Admin 2', 5200000, 3);
+
 INSERT INTO MEMBER (ID_User, Status_Keanggotaan, Metode_Bayar_Favorit) VALUES
 (4, 'Aktif', 'Transfer Bank'),
 (5, 'Aktif', 'Transfer Bank'),
 (6, 'Aktif', 'Transfer Bank'),
 (7, 'Aktif', 'Transfer Bank');
+
 INSERT INTO FILM (ID_Film, Judul_Film, Durasi_Film, Pangkat_Usia) VALUES
 (1, 'Film 1', 90, 'SU'),
 (2, 'Film 2', 95, 'SU'),
 (3, 'Film 3', 100, 'SU'),
 (4, 'Film 4', 105, 'SU'),
 (5, 'Film 5', 110, 'SU');
+
 INSERT INTO GENRE (ID_Genre, Jenis_Genre) VALUES
 (1, 'Aksi'),
 (2, 'Drama'),
 (3, 'Komedi'),
 (4, 'Horor'),
 (5, 'Sci-Fi');
+
 INSERT INTO MEMILIKI (ID_Genre, ID_Film) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
 (4, 4),
 (5, 5);
+
 INSERT INTO TIKET (ID_TIKET, Harga_Tiket, Jadwal_Tayang, ID_Kursi, ID_Film) VALUES
 (1, 45000, '2024-06-12 17:05:16', 1, 1),
 (2, 50000, '2024-01-04 08:57:23', 2, 2),
@@ -213,6 +206,7 @@ INSERT INTO TIKET (ID_TIKET, Harga_Tiket, Jadwal_Tayang, ID_Kursi, ID_Film) VALU
 (8, 55000, '2024-10-26 11:39:54', 8, 3),
 (9, 60000, '2024-04-20 04:21:54', 9, 4),
 (10, 65000, '2024-08-10 12:47:04', 10, 5);
+
 INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, Jam_Mulai, Jam_Selesai, Format_Film, ID_TIKET) VALUES
 (1, '17:15:00', '12:15:00', '2D', 1),
 (2, '19:00:00', '10:30:00', '2D', 2),
@@ -224,6 +218,7 @@ INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, Jam_Mulai, Jam_Selesai, Format_Film
 (8, '16:30:00', '17:00:00', '2D', 8),
 (9, '16:30:00', '20:15:00', '2D', 9),
 (10, '19:00:00', '17:00:00', '2D', 10);
+
 INSERT INTO TRANSAKSI (ID_Transaksi, Tanggal_Transaksi, Waktu_Transaksi, Metode_Bayar, Status_Bayar, Total_Bayar, Diskon, ID_User, ID_TIKET) VALUES
 (1, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 1, 1),
 (2, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 2, 2),
