@@ -1,5 +1,7 @@
+use tubes2;
+
 CREATE TABLE CABANG (
-    ID_Cabang INT PRIMARY KEY,
+    ID_Cabang VARCHAR(10) PRIMARY KEY,
     Nama_Cabang VARCHAR(100),
     Alamat_Cabang TEXT,
     Kota VARCHAR(50),
@@ -8,230 +10,723 @@ CREATE TABLE CABANG (
 );
 
 CREATE TABLE STUDIO (
-    ID_Studio INT PRIMARY KEY,
-    Nomor_Studio VARCHAR(10),
+    ID_Studio VARCHAR(10) PRIMARY KEY,
+    Nomor_Studio INT,
     Kapasitas_Kursi INT,
     Tipe_Studio VARCHAR(50),
-    ID_Cabang INT,
+    ID_Cabang VARCHAR(10),
     FOREIGN KEY (ID_Cabang) REFERENCES CABANG(ID_Cabang)
 );
 
-CREATE TABLE KURSI (
-    ID_Kursi INT PRIMARY KEY,
-    Nomor_Kursi VARCHAR(10),
-    Jenis_Kursi VARCHAR(50),
-    Status_Kursi VARCHAR(20),
-    ID_Studio INT,
-    FOREIGN KEY (ID_Studio) REFERENCES STUDIO(ID_Studio)
-);
-
 CREATE TABLE USER (
-    ID_User INT PRIMARY KEY,
+    ID_User VARCHAR(10) PRIMARY KEY,
     Nama VARCHAR(100),
     Email VARCHAR(100),
-    Nomor_Telepon VARCHAR(20),
+    Nomor_Telepon VARCHAR(15),
     Kata_Sandi VARCHAR(100)
 );
 
-CREATE TABLE ADMIN (
-    ID_User INT PRIMARY KEY,
+create TABLE ADMIN (
+    ID_Admin VARCHAR(10) PRIMARY KEY,
     Alamat TEXT,
-    Gaji DECIMAL(12, 2),
-    ID_Cabang INT,
+    Gaji DECIMAL(10,2),
+    ID_Cabang VARCHAR(10),
     FOREIGN KEY (ID_User) REFERENCES USER(ID_User),
     FOREIGN KEY (ID_Cabang) REFERENCES CABANG(ID_Cabang)
 );
 
-CREATE TABLE MEMBER (
-    ID_User INT PRIMARY KEY,
+create TABLE MEMBER (
+   ID_Member VARCHAR(10) PRIMARY KEY,
     Status_Keanggotaan VARCHAR(50),
     Metode_Bayar_Favorit VARCHAR(50),
     FOREIGN KEY (ID_User) REFERENCES USER(ID_User)
 );
 
+CREATE TABLE GENRE (
+    ID_Genre VARCHAR(10) PRIMARY KEY,
+    Jenis_Genre VARCHAR(50)
+);
+
 CREATE TABLE FILM (
-    ID_Film INT PRIMARY KEY,
+    ID_Film VARCHAR(10) PRIMARY KEY,
     Judul_Film VARCHAR(100),
     Durasi_Film INT,
     Pangkat_Usia VARCHAR(20)
 );
 
-CREATE TABLE GENRE (
-    ID_Genre INT PRIMARY KEY,
-    Jenis_Genre VARCHAR(50)
-);
-
 CREATE TABLE MEMILIKI (
-    ID_Genre INT,
-    ID_Film INT,
+    ID_Genre VARCHAR(10),
+    ID_Film VARCHAR(10),
     PRIMARY KEY (ID_Genre, ID_Film),
     FOREIGN KEY (ID_Genre) REFERENCES GENRE(ID_Genre),
     FOREIGN KEY (ID_Film) REFERENCES FILM(ID_Film)
 );
 
+CREATE TABLE KURSI (
+    ID_Kursi VARCHAR(10) PRIMARY KEY,
+    Nomor_Kursi VARCHAR(10),
+    Jenis_Kursi VARCHAR(20),
+    Status_Kursi VARCHAR(20),
+    ID_Studio VARCHAR(10),
+    FOREIGN KEY (ID_Studio) REFERENCES STUDIO(ID_Studio)
+);
+
 CREATE TABLE TIKET (
-    ID_TIKET INT PRIMARY KEY,
+    ID_Tiket VARCHAR(10) PRIMARY KEY,
     Harga_Tiket DECIMAL(10,2),
     Jadwal_Tayang DATETIME,
-    ID_Kursi INT,
-    ID_Film INT,
+    ID_Kursi VARCHAR(10),
+    ID_Film VARCHAR(10),
     FOREIGN KEY (ID_Kursi) REFERENCES KURSI(ID_Kursi),
-    FOREIGN KEY (ID_Film) REFERENCES FILM(ID_Film)
+    FOREIGN KEY (ID_Film) REFERENCES FILM(ID_Film),
+    FOREIGN KEY (ID_Transaksi) REFERENCES TRANSAKSI(ID_Transaksi)
 );
 
 CREATE TABLE JADWAL_TAYANG (
-    ID_Jadwal_Tayang INT PRIMARY KEY,
+    ID_Jadwal_Tayang VARCHAR(10) PRIMARY KEY,
     Jam_Mulai TIME,
     Jam_Selesai TIME,
     Format_Film VARCHAR(50),
-    ID_TIKET INT,
-    FOREIGN KEY (ID_TIKET) REFERENCES TIKET(ID_TIKET)
+    ID_Tiket VARCHAR(10),
+    FOREIGN KEY (ID_Tiket) REFERENCES TIKET(ID_Tiket)
 );
 
 CREATE TABLE TRANSAKSI (
-    ID_Transaksi INT PRIMARY KEY,
+    ID_Transaksi VARCHAR(10) PRIMARY KEY,
     Tanggal_Transaksi DATE,
     Waktu_Transaksi TIME,
     Metode_Bayar VARCHAR(50),
-    Status_Bayar VARCHAR(20),
-    Total_Bayar DECIMAL(12,2),
+    Status_Bayar VARCHAR(50),
+    Total_Bayar DECIMAL(10,2),
     Diskon DECIMAL(5,2),
-    ID_User INT,
-    ID_TIKET INT,
-    FOREIGN KEY (ID_User) REFERENCES USER(ID_User),
-    FOREIGN KEY (ID_TIKET) REFERENCES TIKET(ID_TIKET)
+    ID_User VARCHAR(10),
+    ID_Tiket VARCHAR(10),
+    FOREIGN KEY (ID_User) REFERENCES USER(ID_User)
 );
 
-INSERT INTO CABANG (ID_Cabang, Nama_Cabang, Alamat_Cabang, Kota, Jumlah_Studio, Jam_Operasional) VALUES
-(1, 'Cabang Jakarta', 'Jl. Sudirman No.1', 'Jakarta', 5, '10:00 - 22:00'),
-(2, 'Cabang Bandung', 'Jl. Asia Afrika No.2', 'Bandung', 3, '11:00 - 21:00'),
-(3, 'Cabang Surabaya', 'Jl. Pemuda No.3', 'Surabaya', 4, '10:00 - 23:00');
+use tubes2;
 
-INSERT INTO STUDIO (ID_Studio, Nomor_Studio, Kapasitas_Kursi, Tipe_Studio, ID_Cabang) VALUES
-(1, 'S1', 100, 'Reguler', 1),
-(2, 'S2', 110, 'Reguler', 2),
-(3, 'S3', 120, 'Reguler', 3),
-(4, 'S4', 130, 'Reguler', 1),
-(5, 'S5', 140, 'Reguler', 2),
-(6, 'S6', 150, 'Reguler', 3),
-(7, 'S7', 160, 'Reguler', 1),
-(8, 'S8', 170, 'Reguler', 2),
-(9, 'S9', 180, 'Reguler', 3),
-(10, 'S10', 190, 'Reguler', 1);
-
-INSERT INTO KURSI (ID_Kursi, Nomor_Kursi, Jenis_Kursi, Status_Kursi, ID_Studio) VALUES
-(1, 'A1', 'Reguler', 'Tersedia', 1),
-(2, 'A2', 'Reguler', 'Tersedia', 2),
-(3, 'A3', 'Reguler', 'Tersedia', 3),
-(4, 'A4', 'Reguler', 'Tersedia', 4),
-(5, 'A5', 'Reguler', 'Tersedia', 5),
-(6, 'A6', 'Reguler', 'Tersedia', 6),
-(7, 'A7', 'Reguler', 'Tersedia', 7),
-(8, 'A8', 'Reguler', 'Tersedia', 8),
-(9, 'A9', 'Reguler', 'Tersedia', 9),
-(10, 'A10', 'Reguler', 'Tersedia', 10),
-(11, 'A11', 'Reguler', 'Tersedia', 1),
-(12, 'A12', 'Reguler', 'Tersedia', 2),
-(13, 'A13', 'Reguler', 'Tersedia', 3),
-(14, 'A14', 'Reguler', 'Tersedia', 4),
-(15, 'A15', 'Reguler', 'Tersedia', 5),
-(16, 'A16', 'Reguler', 'Tersedia', 6),
-(17, 'A17', 'Reguler', 'Tersedia', 7),
-(18, 'A18', 'Reguler', 'Tersedia', 8),
-(19, 'A19', 'Reguler', 'Tersedia', 9),
-(20, 'A20', 'Reguler', 'Tersedia', 10),
-(21, 'A21', 'Reguler', 'Tersedia', 1),
-(22, 'A22', 'Reguler', 'Tersedia', 2),
-(23, 'A23', 'Reguler', 'Tersedia', 3),
-(24, 'A24', 'Reguler', 'Tersedia', 4),
-(25, 'A25', 'Reguler', 'Tersedia', 5),
-(26, 'A26', 'Reguler', 'Tersedia', 6),
-(27, 'A27', 'Reguler', 'Tersedia', 7),
-(28, 'A28', 'Reguler', 'Tersedia', 8),
-(29, 'A29', 'Reguler', 'Tersedia', 9),
-(30, 'A30', 'Reguler', 'Tersedia', 10);
-
-INSERT INTO USER (ID_User, Nama, Email, Nomor_Telepon, Kata_Sandi) VALUES
-(1, 'User1', 'user1@mail.com', '08123456780', 'password123'),
-(2, 'User2', 'user2@mail.com', '08123456781', 'password123'),
-(3, 'User3', 'user3@mail.com', '08123456782', 'password123'),
-(4, 'User4', 'user4@mail.com', '08123456783', 'password123'),
-(5, 'User5', 'user5@mail.com', '08123456784', 'password123'),
-(6, 'User6', 'user6@mail.com', '08123456785', 'password123'),
-(7, 'User7', 'user7@mail.com', '08123456786', 'password123'),
-(8, 'User8', 'user8@mail.com', '08123456787', 'password123'),
-(9, 'User9', 'user9@mail.com', '08123456788', 'password123'),
-(10, 'User10', 'user10@mail.com', '08123456789', 'password123');
-
-INSERT INTO ADMIN (ID_User, Alamat, Gaji, ID_Cabang) VALUES
-(1, 'Jl. Admin 0', 5000000, 1),
-(2, 'Jl. Admin 1', 5100000, 2),
-(3, 'Jl. Admin 2', 5200000, 3);
-
-INSERT INTO MEMBER (ID_User, Status_Keanggotaan, Metode_Bayar_Favorit) VALUES
-(4, 'Aktif', 'Transfer Bank'),
-(5, 'Aktif', 'Transfer Bank'),
-(6, 'Aktif', 'Transfer Bank'),
-(7, 'Aktif', 'Transfer Bank');
-
-INSERT INTO FILM (ID_Film, Judul_Film, Durasi_Film, Pangkat_Usia) VALUES
-(1, 'Film 1', 90, 'SU'),
-(2, 'Film 2', 95, 'SU'),
-(3, 'Film 3', 100, 'SU'),
-(4, 'Film 4', 105, 'SU'),
-(5, 'Film 5', 110, 'SU');
 
 INSERT INTO GENRE (ID_Genre, Jenis_Genre) VALUES
-(1, 'Aksi'),
-(2, 'Drama'),
-(3, 'Komedi'),
-(4, 'Horor'),
-(5, 'Sci-Fi');
+('G001', 'Action'),
+('G002', 'Comedy'),
+('G003', 'Drama'),
+('G004', 'Science Fiction'),
+('G005', 'Fantasy'),
+('G006', 'Thriller'),
+('G007', 'Horror'),
+('G008', 'Romance'),
+('G009', 'Animation'),
+('G010', 'Adventure'),
+('G011', 'Mystery'),
+('G012', 'Crime'),
+('G013', 'Documentary'),
+('G014', 'Musical'),
+('G015', 'Biography'),
+('G016', 'War'),
+('G017', 'Historical'),
+('G018', 'Family'),
+('G019', 'Sport'),
+('G020', 'Western'),
+('G021', 'Indonesian'),
+('G022', 'Korean'),
+('G023', 'Japanese'),
+('G024', 'Chinese'),
+('G025', 'Bollywood'),
+('G026', 'Anime'),
+('G027', 'Superhero'),
+('G028', 'Psychological'),
+('G029', 'Cult'),
+('G030', 'Independent'),
+('G031', 'Short Film'),
+('G032', 'Experimental'),
+('G033', 'Concert Film'),
+('G034', 'Stand-up Comedy'),
+('G035', 'Martial Arts'),
+('G036', 'Cyberpunk'),
+('G037', 'Steampunk'),
+('G038', 'Post-Apocalyptic'),
+('G039', 'Utopian'),
+('G040', 'Dystopian'),
+('G041', 'Coming-of-Age'),
+('G042', 'Road Movie'),
+('G043', 'Slasher'),
+('G044', 'Zombie'),
+('G045', 'Vampire'),
+('G046', 'Werewolf'),
+('G047', 'Kaiju'),
+('G048', 'Disaster'),
+('G049', 'Courtroom'),
+('G050', 'Spy');
 
-INSERT INTO MEMILIKI (ID_Genre, ID_Film) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
 
-INSERT INTO TIKET (ID_TIKET, Harga_Tiket, Jadwal_Tayang, ID_Kursi, ID_Film) VALUES
-(1, 45000, '2024-06-12 17:05:16', 1, 1),
-(2, 50000, '2024-01-04 08:57:23', 2, 2),
-(3, 55000, '2024-04-15 18:13:50', 3, 3),
-(4, 60000, '2024-10-02 20:02:29', 4, 4),
-(5, 65000, '2024-05-02 23:46:10', 5, 5),
-(6, 45000, '2024-04-27 03:49:13', 6, 1),
-(7, 50000, '2024-04-16 05:04:56', 7, 2),
-(8, 55000, '2024-10-26 11:39:54', 8, 3),
-(9, 60000, '2024-04-20 04:21:54', 9, 4),
-(10, 65000, '2024-08-10 12:47:04', 10, 5);
+INSERT INTO FILM (ID_Film, Judul_Film, Durasi_Film, Pangkat_Usia) VALUES
+('F001', 'Avengers: Endgame', 181, 'SU'),
+('F002', 'Spirited Away', 125, 'SU'),
+('F003', 'The Dark Knight', 152, '13+'),
+('F004', 'Parasite', 132, '17+'),
+('F005', 'Forrest Gump', 142, '13+'),
+('F006', 'Interstellar', 169, '13+'),
+('F007', 'Inception', 148, '13+'),
+('F008', 'The Matrix', 136, '17+'),
+('F009', 'Pulp Fiction', 154, '21+'),
+('F010', 'Joker', 122, '17+'),
+('F011', 'Laskar Pelangi', 120, 'SU'),
+('F012', 'Ada Apa Dengan Cinta?', 112, '13+'),
+('F013', 'Pengabdi Setan', 107, '17+'),
+('F014', 'Dilan 1990', 110, '13+'),
+('F015', 'Warkop DKI Reborn: Jangkrik Boss! Part 1', 98, '13+'),
+('F016', 'Gundala', 123, '13+'),
+('F017', 'Nanti Kita Cerita Tentang Hari Ini', 121, '13+'),
+('F018', 'Kukira Kau Rumah', 110, '13+'),
+('F019', 'Miracle in Cell No. 7 (Indonesia)', 124, '13+'),
+('F020', 'KKN di Desa Penari', 130, '17+'),
+('F021', 'Cars', 117, 'SU'),
+('F022', 'Toy Story', 81, 'SU'),
+('F023', 'Finding Nemo', 100, 'SU'),
+('F024', 'The Lion King', 88, 'SU'),
+('F025', 'Frozen', 102, 'SU'),
+('F026', 'Zootopia', 108, 'SU'),
+('F027', 'Moana', 107, 'SU'),
+('F028', 'Coco', 105, 'SU'),
+('F029', 'Soul', 100, 'SU'),
+('F030', 'Encanto', 102, 'SU'),
+('F031', 'Spider-Man: Into the Spider-Verse', 117, 'SU'),
+('F032', 'Avengers: Infinity War', 149, '13+'),
+('F033', 'Dune', 155, '13+'),
+('F034', 'Blade Runner 2049', 164, '17+'),
+('F035', 'Mad Max: Fury Road', 120, '17+'),
+('F036', 'The Grand Budapest Hotel', 99, '13+'),
+('F037', 'La La Land', 128, '13+'),
+('F038', 'Whiplash', 106, '13+'),
+('F039', 'Get Out', 104, '17+'),
+('F040', 'Us', 116, '17+'),
+('F041', 'Hereditary', 127, '21+'),
+('F042', 'Midsommar', 147, '21+'),
+('F043', 'Knives Out', 130, '13+'),
+('F044', 'Glass Onion: A Knives Out Mystery', 139, '13+'),
+('F045', 'Dunkirk', 106, '13+'),
+('F046', '1917', 119, '13+'),
+('F047', 'Ford v Ferrari', 152, '13+'),
+('F048', 'Bohemian Rhapsody', 134, '13+'),
+('F049', 'Rocketman', 121, '13+'),
+('F050', 'Elvis', 159, '13+');
 
-INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, Jam_Mulai, Jam_Selesai, Format_Film, ID_TIKET) VALUES
-(1, '17:15:00', '12:15:00', '2D', 1),
-(2, '19:00:00', '10:30:00', '2D', 2),
-(3, '18:30:00', '16:00:00', '2D', 3),
-(4, '14:00:00', '15:15:00', '2D', 4),
-(5, '20:30:00', '13:00:00', '2D', 5),
-(6, '13:00:00', '17:15:00', '2D', 6),
-(7, '20:15:00', '17:00:00', '2D', 7),
-(8, '16:30:00', '17:00:00', '2D', 8),
-(9, '16:30:00', '20:15:00', '2D', 9),
-(10, '19:00:00', '17:00:00', '2D', 10);
+INSERT INTO MEMILIKI (ID_Film, ID_Genre) VALUES
+('F001', 'G001'), ('F001', 'G004'), ('F001', 'G010'),
+('F002', 'G009'), ('F002', 'G005'), ('F002', 'G010'),
+('F003', 'G001'), ('F003', 'G012'), ('F003', 'G006'),
+('F004', 'G003'), ('F004', 'G006'),
+('F005', 'G003'), ('F005', 'G008'),
+('F006', 'G004'), ('F006', 'G010'), ('F006', 'G003'),
+('F007', 'G001'), ('F007', 'G004'), ('F007', 'G006'),
+('F008', 'G001'), ('F008', 'G004'),
+('F009', 'G012'), ('F009', 'G003'),
+('F010', 'G012'), ('F010', 'G003'), ('F010', 'G006');
 
-INSERT INTO TRANSAKSI (ID_Transaksi, Tanggal_Transaksi, Waktu_Transaksi, Metode_Bayar, Status_Bayar, Total_Bayar, Diskon, ID_User, ID_TIKET) VALUES
-(1, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 1, 1),
-(2, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 2, 2),
-(3, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 3, 3),
-(4, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 4, 4),
-(5, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 5, 5),
-(6, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 6, 6),
-(7, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 7, 7),
-(8, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 8, 8),
-(9, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 9, 9),
-(10, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 10, 10),
-(11, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 1, 1),
-(12, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 2, 2),
-(13, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 3, 3),
-(14, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 4, 4),
-(15, '2024-12-01', '18:30:00', 'QRIS', 'Lunas', 50000, 0, 5, 5);
+INSERT INTO MEMILIKI (ID_Film, ID_Genre) VALUES
+('F011', 'G003'), ('F011', 'G018'),
+('F012', 'G008'), ('F012', 'G003'),
+('F013', 'G007'), ('F013', 'G011'),
+('F014', 'G008'), ('F014', 'G003'),
+('F015', 'G002'),
+('F016', 'G001'), ('F016', 'G005'),
+('F017', 'G003'), ('F017', 'G018'),
+('F018', 'G003'), ('F018', 'G008'),
+('F019', 'G003'), ('F019', 'G002'),
+('F020', 'G007'), ('F020', 'G011'),
+('F021', 'G009'), ('F021', 'G018'),
+('F022', 'G009'), ('F022', 'G018'),
+('F023', 'G009'), ('F023', 'G010'),
+('F024', 'G009'), ('F024', 'G018'),
+('F025', 'G009'), ('F025', 'G005'),
+('F026', 'G009'), ('F026', 'G010'),
+('F027', 'G009'), ('F027', 'G010'),
+('F028', 'G009'), ('F028', 'G018'),
+('F029', 'G009'), ('F029', 'G003'),
+('F030', 'G009'), ('F030', 'G018'),
+('F031', 'G009'), ('F031', 'G001'), ('F031', 'G005'),
+('F032', 'G001'), ('F032', 'G004'), ('F032', 'G010'),
+('F033', 'G004'), ('F033', 'G010'), ('F033', 'G005'),
+('F034', 'G004'), ('F034', 'G012'), ('F034', 'G006'),
+('F035', 'G001'), ('F035', 'G004'), ('F035', 'G010'),
+('F036', 'G002'), ('G036', 'G003'),
+('F037', 'G002'), ('G037', 'G008'), ('G037', 'G014'),
+('F038', 'G003'), ('G038', 'G014'),
+('F039', 'G007'), ('G039', 'G006'),
+('F040', 'G007'), ('G040', 'G006'),
+('F041', 'G007'), ('G041', 'G003'),
+('F042', 'G007'), ('G042', 'G003'),
+('F043', 'G011'), ('G043', 'G002'),
+('F044', 'G011'), ('G044', 'G002'),
+('F045', 'G016'), ('G045', 'G017'),
+('F046', 'G016'), ('G046', 'G017'),
+('F047', 'G015'), ('G047', 'G019'),
+('F048', 'G015'), ('G048', 'G014'),
+('F049', 'G015'), ('G049', 'G014'),
+('F050', 'G015'), ('G050', 'G014');
+
+INSERT INTO MEMILIKI (ID_Film, ID_Genre) VALUES
+('F001', 'G007'), ('F002', 'G007'), ('F003', 'G007'), ('F004', 'G007'), ('F005', 'G007'),
+('F006', 'G007'), ('F007', 'G007'), ('F008', 'G007'), ('F009', 'G007'), ('F010', 'G007'),
+('F011', 'G006'), ('F012', 'G006'), ('F013', 'G006'), ('F014', 'G006'), ('F015', 'G006'),
+('F016', 'G006'), ('F017', 'G006'), ('F018', 'G006'), ('F019', 'G006'), ('F020', 'G006'),
+('F021', 'G001'), ('F022', 'G001'), ('F023', 'G001'), ('F024', 'G001'), ('F025', 'G001'),
+('F026', 'G001'), ('F027', 'G001'), ('F028', 'G001'), ('F029', 'G001'), ('F030', 'G001'),
+('F031', 'G002'), ('F032', 'G002'), ('F033', 'G002'), ('F034', 'G002'), ('F035', 'G002'),
+('F036', 'G001'), ('F037', 'G001'), ('F038', 'G001'), ('F039', 'G001'), ('F040', 'G001'),
+('F041', 'G001'), ('F042', 'G001'), ('F043', 'G001'), ('F044', 'G001'), ('F045', 'G001'),
+('F046', 'G002'), ('F047', 'G002'), ('F048', 'G002'), ('F049', 'G002'), ('F050', 'G002'),
+('F001', 'G003'), ('F002', 'G003'), ('F003', 'G004'), ('F004', 'G005'), ('F005', 'G001'),
+('F006', 'G002'), ('F007', 'G003'), ('F008', 'G005'), ('F009', 'G004'), ('F010', 'G001'),
+('F011', 'G002'), ('F012', 'G001'), ('F013', 'G004'), ('F014', 'G005'), ('F015', 'G003'),
+('F016', 'G002'), ('F017', 'G001'), ('F018', 'G004'), ('F019', 'G005'), ('F020', 'G003'),
+('F021', 'G003'), ('F022', 'G004'), ('F023', 'G005'), ('F024', 'G003'), ('F025', 'G004'),
+('F026', 'G005'), ('F027', 'G003'), ('F028', 'G004'), ('F029', 'G005'), ('F030', 'G003'),
+('F031', 'G004'), ('F032', 'G005'), ('F033', 'G003'), ('F034', 'G004'), ('F035', 'G005'),
+('F036', 'G003'), ('F037', 'G004'), ('F038', 'G005'), ('F039', 'G003'), ('F040', 'G004'),
+('F041', 'G005'), ('F042', 'G003'), ('F043', 'G004'), ('F044', 'G005'), ('F045', 'G003'),
+('F046', 'G004'), ('F047', 'G005'), ('F048', 'G003'), ('F049', 'G004'), ('F050', 'G005');
+-- This set will have 10 + 50 + 50 + 50 + 50 = 210 entries.
+
+-- Data for USER (at least 50 entries)
+INSERT INTO USER (ID_User, Nama, Email, Nomor_Telepon, Kata_Sandi) VALUES
+('U001', 'Alice Smith', 'alice.smith@example.com', '081234567890', 'pass123'),
+('U002', 'Bob Johnson', 'bob.j@example.com', '081234567891', 'pass123'),
+('U003', 'Charlie Brown', 'charlie.b@example.com', '081234567892', 'pass123'),
+('U004', 'Diana Prince', 'diana.p@example.com', '081234567893', 'pass123'),
+('U005', 'Eve Adams', 'eve.a@example.com', '081234567894', 'pass123'),
+('U006', 'Frank White', 'frank.w@example.com', '081234567895', 'pass123'),
+('U007', 'Grace Hall', 'grace.h@example.com', '081234567896', 'pass123'),
+('U008', 'Harry King', 'harry.k@example.com', '081234567897', 'pass123'),
+('U009', 'Ivy Lee', 'ivy.l@example.com', '081234567898', 'pass123'),
+('U010', 'Jack Green', 'jack.g@example.com', '081234567899', 'pass123'),
+('U011', 'Karen Black', 'karen.b@example.com', '081234567900', 'pass123'),
+('U012', 'Liam Taylor', 'liam.t@example.com', '081234567901', 'pass123'),
+('U013', 'Mia Wright', 'mia.w@example.com', '081234567902', 'pass123'),
+('U014', 'Noah Scott', 'noah.s@example.com', '081234567903', 'pass123'),
+('U015', 'Olivia Adams', 'olivia.a@example.com', '081234567904', 'pass123'),
+('U016', 'Peter Baker', 'peter.b@example.com', '081234567905', 'pass123'),
+('U017', 'Quinn Davis', 'quinn.d@example.com', '081234567906', 'pass123'),
+('U018', 'Rachel Evans', 'rachel.e@example.com', '081234567907', 'pass123'),
+('U019', 'Sam Fisher', 'sam.f@example.com', '081234567908', 'pass123'),
+('U020', 'Tina Garcia', 'tina.g@example.com', '081234567909', 'pass123'),
+('U021', 'Umar Harris', 'umar.h@example.com', '081234567910', 'pass123'),
+('U022', 'Vera Jackson', 'vera.j@example.com', '081234567911', 'pass123'),
+('U023', 'Wendy Clark', 'wendy.c@example.com', '081234567912', 'pass123'),
+('U024', 'Xavier Lewis', 'xavier.l@example.com', '081234567913', 'pass123'),
+('U025', 'Yara Martinez', 'yara.m@example.com', '081234567914', 'pass123'),
+('U026', 'Zoe Nelson', 'zoe.n@example.com', '081234567915', 'pass123'),
+('U027', 'Anna White', 'anna.w@example.com', '081234567916', 'pass123'),
+('U028', 'Ben Scott', 'ben.s@example.com', '081234567917', 'pass123'),
+('U029', 'Chloe Green', 'chloe.g@example.com', '081234567918', 'pass123'),
+('U030', 'David Hall', 'david.h@example.com', '081234567919', 'pass123'),
+('U031', 'Ella King', 'ella.k@example.com', '081234567920', 'pass123'),
+('U032', 'Finn Lee', 'finn.l@example.com', '081234567921', 'pass123'),
+('U033', 'Gigi Moore', 'gigi.m@example.com', '081234567922', 'pass123'),
+('U034', 'Henry Taylor', 'henry.t@example.com', '081234567923', 'pass123'),
+('U035', 'Iris Wright', 'iris.w@example.com', '081234567924', 'pass123'),
+('U036', 'Jake Hill', 'jake.h@example.com', '081234567925', 'pass123'),
+('U037', 'Kelly Clark', 'kelly.c@example.com', '081234567926', 'pass123'),
+('U038', 'Leo Bell', 'leo.b@example.com', '081234567927', 'pass123'),
+('U039', 'Mona Ward', 'mona.w@example.com', '081234567928', 'pass123'),
+('U040', 'Nina Cooper', 'nina.c@example.com', '081234567929', 'pass123'),
+('U041', 'Oscar Price', 'oscar.p@example.com', '081234567930', 'pass123'),
+('U042', 'Paige Ross', 'paige.r@example.com', '081234567931', 'pass123'),
+('U043', 'Quentin Wood', 'quentin.w@example.com', '081234567932', 'pass123'),
+('U044', 'Ruby Hayes', 'ruby.h@example.com', '081234567933', 'pass123'),
+('U045', 'Steve Cox', 'steve.c@example.com', '081234567934', 'pass123'),
+('U046', 'Tara Foster', 'tara.f@example.com', '081234567935', 'pass123'),
+('U047', 'Uriah Gray', 'uriah.g@example.com', '081234567936', 'pass123'),
+('U048', 'Violet Long', 'violet.l@example.com', '081234567937', 'pass123'),
+('U049', 'Will Perry', 'will.p@example.com', '081234567938', 'pass123'),
+('U050', 'Xena Brooks', 'xena.b@example.com', '081234567939', 'pass123');
+
+
+INSERT INTO MEMBER (ID_Member, ID_User, Status_Keanggotaan, Metode_Bayar_Favorit, Total_Bayar) VALUES
+('M001', 'U001', 'Active', 'Credit Card', 150000.00),
+('M002', 'U003', 'Active', 'E-Wallet', 250000.00),
+('M003', 'U005', 'Premium', 'Bank Transfer', 500000.00),
+('M004', 'U007', 'Active', 'Credit Card', 75000.00),
+('M005', 'U009', 'Active', 'E-Wallet', 120000.00),
+('M006', 'U011', 'Premium', 'Credit Card', 300000.00),
+('M007', 'U013', 'Active', 'Bank Transfer', 90000.00),
+('M008', 'U015', 'Active', 'E-Wallet', 180000.00),
+('M009', 'U017', 'Premium', 'Bank Transfer', 600000.00),
+('M010', 'U019', 'Active', 'Credit Card', 100000.00),
+('M011', 'U021', 'Active', 'E-Wallet', 130000.00),
+('M012', 'U023', 'Premium', 'Credit Card', 350000.00),
+('M013', 'U025', 'Active', 'Bank Transfer', 80000.00),
+('M014', 'U027', 'Active', 'E-Wallet', 160000.00),
+('M015', 'U029', 'Premium', 'Bank Transfer', 550000.00),
+('M016', 'U031', 'Active', 'Credit Card', 110000.00),
+('M017', 'U033', 'Active', 'E-Wallet', 190000.00),
+('M018', 'U035', 'Premium', 'Credit Card', 400000.00),
+('M019', 'U037', 'Active', 'Bank Transfer', 95000.00),
+('M020', 'U039', 'Active', 'E-Wallet', 200000.00),
+('M021', 'U041', 'Premium', 'Bank Transfer', 650000.00),
+('M022', 'U043', 'Active', 'Credit Card', 140000.00),
+('M023', 'U045', 'Active', 'E-Wallet', 210000.00),
+('M024', 'U047', 'Premium', 'Credit Card', 450000.00),
+('M025', 'U049', 'Active', 'Bank Transfer', 105000.00);
+
+INSERT INTO MEMBER (ID_Member, ID_User, Status_Keanggotaan, Metode_Bayar_Favorit, Total_Bayar) VALUES
+('M026', 'U002', 'Active', 'E-Wallet', 115000.00),
+('M027', 'U004', 'Premium', 'Bank Transfer', 480000.00),
+('M028', 'U006', 'Active', 'Credit Card', 85000.00),
+('M029', 'U008', 'Active', 'E-Wallet', 170000.00),
+('M030', 'U010', 'Premium', 'Bank Transfer', 580000.00),
+('M031', 'U012', 'Active', 'Credit Card', 125000.00),
+('M032', 'U014', 'Active', 'E-Wallet', 220000.00),
+('M033', 'U016', 'Premium', 'Credit Card', 420000.00),
+('M034', 'U018', 'Active', 'Bank Transfer', 98000.00),
+('M035', 'U020', 'Active', 'E-Wallet', 230000.00),
+('M036', 'U022', 'Premium', 'Bank Transfer', 680000.00),
+('M037', 'U024', 'Active', 'Credit Card', 145000.00),
+('M038', 'U026', 'Active', 'E-Wallet', 240000.00),
+('M039', 'U028', 'Premium', 'Credit Card', 470000.00),
+('M040', 'U030', 'Active', 'Bank Transfer', 115000.00),
+('M041', 'U032', 'Active', 'E-Wallet', 250000.00),
+('M042', 'U034', 'Premium', 'Bank Transfer', 700000.00),
+('M043', 'U036', 'Active', 'Credit Card', 155000.00),
+('M044', 'U038', 'Active', 'E-Wallet', 260000.00),
+('M045', 'U040', 'Premium', 'Credit Card', 490000.00),
+('M046', 'U042', 'Active', 'Bank Transfer', 120000.00),
+('M047', 'U044', 'Active', 'E-Wallet', 270000.00),
+('M048', 'U046', 'Premium', 'Bank Transfer', 720000.00),
+('M049', 'U048', 'Active', 'Credit Card', 160000.00),
+('M050', 'U050', 'Active', 'E-Wallet', 280000.00);
+
+
+-- Data for CABANG (at least 50 entries)
+INSERT INTO CABANG (ID_Cabang, Nama_Cabang, Alamat_Cabang, Kota, Jumlah_Studio, Jam_Operasional) VALUES
+('C001', 'Cinema XXI Jakarta Pusat', 'Jl. Thamrin No.21, Jakarta Pusat', 'Jakarta', 10, '09:00 - 23:00'),
+('C002', 'CGV Grand Indonesia', 'Jl. MH Thamrin No.1, Jakarta Pusat', 'Jakarta', 12, '10:00 - 24:00'),
+('C003', 'Cinepolis Bandung', 'Jl. Merdeka No.56, Bandung', 'Bandung', 8, '09:30 - 23:30'),
+('C004', 'Cinema XXI Surabaya', 'Jl. Basuki Rahmat No.8-12, Surabaya', 'Surabaya', 9, '09:00 - 23:00'),
+('C005', 'CGV Yogyakarta', 'Jl. Laksda Adisucipto No.80, Yogyakarta', 'Yogyakarta', 7, '10:00 - 23:00'),
+('C006', 'Cinepolis Medan', 'Jl. Gajah Mada No.16, Medan', 'Medan', 6, '09:30 - 23:00'),
+('C007', 'Cinema XXI Semarang', 'Jl. Pemuda No.138, Semarang', 'Semarang', 8, '09:00 - 23:00'),
+('C008', 'CGV Makassar', 'Jl. Sam Ratulangi No.123, Makassar', 'Makassar', 5, '10:00 - 23:00'),
+('C009', 'Cinepolis Denpasar', 'Jl. Teuku Umar No.1, Denpasar', 'Denpasar', 7, '09:30 - 23:30'),
+('C010', 'Cinema XXI Palembang', 'Jl. Jend. Sudirman No.1, Palembang', 'Palembang', 6, '09:00 - 23:00'),
+('C011', 'CGV Bekasi', 'Jl. Ahmad Yani No.1, Bekasi', 'Bekasi', 9, '10:00 - 24:00'),
+('C012', 'Cinepolis Tangerang', 'Jl. Bintaro Raya No.1, Tangerang', 'Tangerang', 7, '09:30 - 23:30'),
+('C013', 'Cinema XXI Depok', 'Jl. Margonda Raya No.1, Depok', 'Depok', 8, '09:00 - 23:00'),
+('C014', 'CGV Bogor', 'Jl. Pajajaran No.1, Bogor', 'Bogor', 6, '10:00 - 23:00'),
+('C015', 'Cinepolis Solo', 'Jl. Slamet Riyadi No.1, Solo', 'Solo', 5, '09:30 - 23:00'),
+('C016', 'Cinema XXI Malang', 'Jl. Kawi No.1, Malang', 'Malang', 7, '09:00 - 23:00'),
+('C017', 'CGV Pekanbaru', 'Jl. Sudirman No.1, Pekanbaru', 'Pekanbaru', 6, '10:00 - 23:00'),
+('C018', 'Cinepolis Lampung', 'Jl. Kartini No.1, Bandar Lampung', 'Bandar Lampung', 5, '09:30 - 23:00'),
+('C019', 'Cinema XXI Batam', 'Jl. Engku Putri No.1, Batam', 'Batam', 8, '09:00 - 23:00'),
+('C020', 'CGV Balikpapan', 'Jl. Sudirman No.1, Balikpapan', 'Balikpapan', 7, '10:00 - 23:00'),
+('C021', 'Cinepolis Pontianak', 'Jl. Gajah Mada No.1, Pontianak', 'Pontianak', 6, '09:30 - 23:00'),
+('C022', 'Cinema XXI Manado', 'Jl. Pierre Tendean No.1, Manado', 'Manado', 5, '09:00 - 23:00'),
+('C023', 'CGV Palu', 'Jl. Sisingamangaraja No.1, Palu', 'Palu', 4, '10:00 - 23:00'),
+('C024', 'Cinepolis Kendari', 'Jl. Halu Oleo No.1, Kendari', 'Kendari', 4, '09:30 - 23:00'),
+('C025', 'Cinema XXI Gorontalo', 'Jl. Jend. Sudirman No.1, Gorontalo', 'Gorontalo', 3, '09:00 - 23:00'),
+('C026', 'CGV Samarinda', 'Jl. M. Yamin No.1, Samarinda', 'Samarinda', 7, '10:00 - 23:00'),
+('C027', 'Cinepolis Banjarmasin', 'Jl. A. Yani No.1, Banjarmasin', 'Banjarmasin', 6, '09:30 - 23:00'),
+('C028', 'Cinema XXI Balikpapan', 'Jl. Jend. Sudirman No.2, Balikpapan', 'Balikpapan', 8, '09:00 - 23:00'),
+('C029', 'CGV Palangkaraya', 'Jl. Tjilik Riwut No.1, Palangkaraya', 'Palangkaraya', 5, '10:00 - 23:00'),
+('C030', 'Cinepolis Pangkal Pinang', 'Jl. Depati Hamzah No.1, Pangkal Pinang', 'Pangkal Pinang', 4, '09:30 - 23:00'),
+('C031', 'Cinema XXI Ternate', 'Jl. Sultan Baabullah No.1, Ternate', 'Ternate', 3, '09:00 - 23:00'),
+('C032', 'CGV Ambon', 'Jl. Sultan Hairun No.1, Ambon', 'Ambon', 4, '10:00 - 23:00'),
+('C033', 'Cinepolis Jayapura', 'Jl. Raya Abepura No.1, Jayapura', 'Jayapura', 3, '09:30 - 23:00'),
+('C034', 'Cinema XXI Kupang', 'Jl. El Tari No.1, Kupang', 'Kupang', 4, '09:00 - 23:00'),
+('C035', 'CGV Mataram', 'Jl. Pejanggik No.1, Mataram', 'Mataram', 5, '10:00 - 23:00'),
+('C036', 'Cinepolis Sorong', 'Jl. Basuki Rahmat No.1, Sorong', 'Sorong', 3, '09:30 - 23:00'),
+('C037', 'Cinema XXI Tanjungpinang', 'Jl. Raja Haji Fisabilillah No.1, Tanjungpinang', 'Tanjungpinang', 4, '09:00 - 23:00'),
+('C038', 'CGV Lhokseumawe', 'Jl. Merdeka No.1, Lhokseumawe', 'Lhokseumawe', 3, '10:00 - 23:00'),
+('C039', 'Cinepolis Banda Aceh', 'Jl. Sultan Iskandar Muda No.1, Banda Aceh', 'Banda Aceh', 5, '09:30 - 23:00'),
+('C040', 'Cinema XXI Cirebon', 'Jl. Dr. Cipto Mangunkusumo No.1, Cirebon', 'Cirebon', 6, '09:00 - 23:00'),
+('C041', 'CGV Tasikmalaya', 'Jl. HZ Mustofa No.1, Tasikmalaya', 'Tasikmalaya', 4, '10:00 - 23:00'),
+('C042', 'Cinepolis Sukabumi', 'Jl. A. Yani No.1, Sukabumi', 'Sukabumi', 4, '09:30 - 23:00'),
+('C043', 'Cinema XXI Karawang', 'Jl. Raya Karawang Barat No.1, Karawang', 'Karawang', 5, '09:00 - 23:00'),
+('C044', 'CGV Purwokerto', 'Jl. Jend. Sudirman No.1, Purwokerto', 'Purwokerto', 4, '10:00 - 23:00'),
+('C045', 'Cinepolis Tegal', 'Jl. Gajah Mada No.1, Tegal', 'Tegal', 3, '09:30 - 23:00'),
+('C046', 'Cinema XXI Pekalongan', 'Jl. Hayam Wuruk No.1, Pekalongan', 'Pekalongan', 3, '09:00 - 23:00'),
+('C047', 'CGV Salatiga', 'Jl. Diponegoro No.1, Salatiga', 'Salatiga', 3, '10:00 - 23:00'),
+('C048', 'Cinepolis Cilegon', 'Jl. Sultan Ageng Tirtayasa No.1, Cilegon', 'Cilegon', 4, '09:30 - 23:00'),
+('C049', 'Cinema XXI Serang', 'Jl. Jend. A. Yani No.1, Serang', 'Serang', 5, '09:00 - 23:00'),
+('C050', 'CGV Jambi', 'Jl. Hayam Wuruk No.1, Jambi', 'Jambi', 6, '10:00 - 23:00');
+
+INSERT INTO STUDIO (ID_Studio, ID_Cabang, Nomor_Studio, Kapasitas_Kursi, Tipe_Studio) VALUES
+('S001', 'C001', 1, 150, 'Regular'),
+('S002', 'C001', 2, 120, 'Regular'),
+('S003', 'C001', 3, 100, 'VIP'),
+('S004', 'C002', 1, 200, 'IMAX'),
+('S005', 'C002', 2, 160, 'Dolby Atmos'),
+('S006', 'C003', 1, 130, 'Regular'),
+('S007', 'C003', 2, 90, 'VIP'),
+('S008', 'C004', 1, 140, 'Regular'),
+('S009', 'C004', 2, 110, 'Regular'),
+('S010', 'C005', 1, 120, 'Regular'),
+('S011', 'C005', 2, 80, 'VIP'),
+('S012', 'C006', 1, 100, 'Regular'),
+('S013', 'C007', 1, 150, 'Regular'),
+('S014', 'C008', 1, 110, 'Regular'),
+('S015', 'C009', 1, 130, 'Regular'),
+('S016', 'C010', 1, 100, 'Regular'),
+('S017', 'C011', 1, 180, 'IMAX'),
+('S018', 'C011', 2, 140, 'Regular'),
+('S019', 'C012', 1, 120, 'Regular'),
+('S020', 'C013', 1, 130, 'Regular'),
+('S021', 'C014', 1, 100, 'Regular'),
+('S022', 'C015', 1, 90, 'VIP'),
+('S023', 'C016', 1, 110, 'Regular'),
+('S024', 'C017', 1, 100, 'Regular'),
+('S025', 'C018', 1, 80, 'Regular'),
+('S026', 'C019', 1, 120, 'Regular'),
+('S027', 'C020', 1, 110, 'Regular'),
+('S028', 'C021', 1, 90, 'Regular'),
+('S029', 'C022', 1, 80, 'Regular'),
+('S030', 'C023', 1, 70, 'Regular'),
+('S031', 'C024', 1, 70, 'Regular'),
+('S032', 'C025', 1, 60, 'Regular'),
+('S033', 'C026', 1, 100, 'Regular'),
+('S034', 'C027', 1, 90, 'Regular'),
+('S035', 'C028', 1, 120, 'Regular'),
+('S036', 'C029', 1, 80, 'Regular'),
+('S037', 'C030', 1, 70, 'Regular'),
+('S038', 'C031', 1, 60, 'Regular'),
+('S039', 'C032', 1, 70, 'Regular'),
+('S040', 'C033', 1, 60, 'Regular'),
+('S041', 'C034', 1, 70, 'Regular'),
+('S042', 'C035', 1, 80, 'Regular'),
+('S043', 'C036', 1, 60, 'Regular'),
+('S044', 'C037', 1, 70, 'Regular'),
+('S045', 'C038', 1, 60, 'Regular'),
+('S046', 'C039', 1, 80, 'Regular'),
+('S047', 'C040', 1, 90, 'Regular'),
+('S048', 'C041', 1, 70, 'Regular'),
+('S049', 'C042', 1, 70, 'Regular'),
+('S050', 'C043', 1, 80, 'Regular');
+
+
+-- Data for ADMIN (at least 50 entries)
+INSERT INTO ADMIN (ID_Admin, ID_Cabang, Alamat, Gaji) VALUES
+('A001', 'C001', 'Jl. Sudirman No.10, Jakarta', 8000000.00),
+('A002', 'C001', 'Jl. Merdeka No.5, Jakarta', 7500000.00),
+('A003', 'C002', 'Jl. Kebon Kacang No.20, Jakarta', 8500000.00),
+('A004', 'C003', 'Jl. Asia Afrika No.1, Bandung', 7000000.00),
+('A005', 'C004', 'Jl. Raya Darmo No.1, Surabaya', 7800000.00),
+('A006', 'C005', 'Jl. Malioboro No.10, Yogyakarta', 6800000.00),
+('A007', 'C006', 'Jl. Gatot Subroto No.15, Medan', 7200000.00),
+('A008', 'C007', 'Jl. Pandanaran No.5, Semarang', 7100000.00),
+('A009', 'C008', 'Jl. Perintis Kemerdekaan No.1, Makassar', 6900000.00),
+('A010', 'C009', 'Jl. Raya Kuta No.1, Denpasar', 7300000.00),
+('A011', 'C010', 'Jl. Kol. H. Barlian No.1, Palembang', 6700000.00),
+('A012', 'C011', 'Jl. Ir. H. Juanda No.1, Bekasi', 7700000.00),
+('A013', 'C012', 'Jl. BSD Raya Utama No.1, Tangerang', 7600000.00),
+('A014', 'C013', 'Jl. Raya Bogor KM 28, Depok', 7000000.00),
+('A015', 'C014', 'Jl. Ahmad Yani No.1, Bogor', 6900000.00),
+('A016', 'C015', 'Jl. Jend. Sudirman No.1, Solo', 6500000.00),
+('A017', 'C016', 'Jl. Ijen No.1, Malang', 6800000.00),
+('A018', 'C017', 'Jl. Arifin Achmad No.1, Pekanbaru', 6700000.00),
+('A019', 'C018', 'Jl. Teuku Umar No.1, Bandar Lampung', 6600000.00),
+('A020', 'C019', 'Jl. Imam Bonjol No.1, Batam', 7000000.00),
+('A021', 'C020', 'Jl. Letjen Suprapto No.1, Balikpapan', 7100000.00),
+('A022', 'C021', 'Jl. Sultan Abdurrahman No.1, Pontianak', 6600000.00),
+('A023', 'C022', 'Jl. Sam Ratulangi No.1, Manado', 6500000.00),
+('A024', 'C023', 'Jl. Hasanuddin No.1, Palu', 6400000.00),
+('A025', 'C024', 'Jl. MT Haryono No.1, Kendari', 6300000.00),
+('A026', 'C025', 'Jl. Cokroaminoto No.1, Gorontalo', 6200000.00),
+('A027', 'C026', 'Jl. Pahlawan No.1, Samarinda', 6800000.00),
+('A028', 'C027', 'Jl. Veteran No.1, Banjarmasin', 6700000.00),
+('A029', 'C028', 'Jl. Sudirman No.3, Balikpapan', 7200000.00), -- Another admin for C028
+('A030', 'C029', 'Jl. Diponegoro No.1, Palangkaraya', 6400000.00),
+('A031', 'C030', 'Jl. Raya Koba No.1, Pangkal Pinang', 6300000.00),
+('A032', 'C031', 'Jl. Hasanuddin No.1, Ternate', 6200000.00),
+('A033', 'C032', 'Jl. Pattimura No.1, Ambon', 6300000.00),
+('A034', 'C033', 'Jl. Raya Sentani No.1, Jayapura', 6200000.00),
+('A035', 'C034', 'Jl. Timor Raya No.1, Kupang', 6300000.00),
+('A036', 'C035', 'Jl. Langko No.1, Mataram', 6400000.00),
+('A037', 'C036', 'Jl. Jend. Sudirman No.1, Sorong', 6200000.00),
+('A038', 'C037', 'Jl. Bakar Batu No.1, Tanjungpinang', 6300000.00),
+('A039', 'C038', 'Jl. Iskandar Muda No.1, Lhokseumawe', 6200000.00),
+('A040', 'C039', 'Jl. Teuku Daud Beureueh No.1, Banda Aceh', 6500000.00),
+('A041', 'C040', 'Jl. Kartini No.1, Cirebon', 6700000.00),
+('A042', 'C041', 'Jl. Raya Mangunreja No.1, Tasikmalaya', 6400000.00),
+('A043', 'C042', 'Jl. Siliwangi No.1, Sukabumi', 6300000.00),
+('A044', 'C043', 'Jl. Raya Klari No.1, Karawang', 6500000.00),
+('A045', 'C044', 'Jl. Supriyadi No.1, Purwokerto', 6400000.00),
+('A046', 'C045', 'Jl. Veteran No.1, Tegal', 6300000.00),
+('A047', 'C046', 'Jl. Pemuda No.1, Pekalongan', 6200000.00),
+('A048', 'C047', 'Jl. Jend. Sudirman No.1, Salatiga', 6300000.00),
+('A049', 'C048', 'Jl. KH. Abdul Fatah Hasan No.1, Cilegon', 6400000.00),
+('A050', 'C049', 'Jl. Raya Serang-Jakarta No.1, Serang', 6500000.00);
+
+INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, ID_Film, ID_Studio, Jam_Mulai, Jam_Selesai, Format_Film, Tanggal_Tayang) VALUES
+('J001', 'F001', 'S001', '10:00:00', '13:01:00', '2D', '2025-05-27'),
+('J002', 'F002', 'S001', '14:00:00', '16:05:00', '2D', '2025-05-27'),
+('J003', 'F003', 'S002', '10:30:00', '13:02:00', '2D', '2025-05-27'),
+('J004', 'F004', 'S002', '13:30:00', '15:42:00', '2D', '2025-05-27'),
+('J005', 'F005', 'S003', '11:00:00', '13:22:00', '2D', '2025-05-27'),
+('J006', 'F006', 'S004', '10:00:00', '12:49:00', 'IMAX', '2025-05-27'),
+('J007', 'F007', 'S004', '13:00:00', '15:28:00', 'IMAX', '2025-05-27'),
+('J008', 'F008', 'S005', '11:00:00', '13:16:00', 'Dolby Atmos', '2025-05-27'),
+('J009', 'F009', 'S006', '10:00:00', '12:34:00', '2D', '2025-05-27'),
+('J010', 'F010', 'S006', '13:00:00', '15:02:00', '2D', '2025-05-27'),
+('J011', 'F001', 'S001', '10:00:00', '13:01:00', '2D', '2025-05-28'),
+('J012', 'F002', 'S001', '14:00:00', '16:05:00', '2D', '2025-05-28'),
+('J013', 'F003', 'S002', '10:30:00', '13:02:00', '2D', '2025-05-28'),
+('J014', 'F004', 'S002', '13:30:00', '15:42:00', '2D', '2025-05-28'),
+('J015', 'F005', 'S003', '11:00:00', '13:22:00', '2D', '2025-05-28'),
+('J016', 'F006', 'S004', '10:00:00', '12:49:00', 'IMAX', '2025-05-28'),
+('J017', 'F007', 'S004', '13:00:00', '15:28:00', 'IMAX', '2025-05-28'),
+('J018', 'F008', 'S005', '11:00:00', '13:16:00', 'Dolby Atmos', '2025-05-28'),
+('J019', 'F009', 'S006', '10:00:00', '12:34:00', '2D', '2025-05-28'),
+('J020', 'F010', 'S006', '13:00:00', '15:02:00', '2D', '2025-05-28');
+
+INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, ID_Film, ID_Studio, Jam_Mulai, Jam_Selesai, Format_Film, Tanggal_Tayang) VALUES
+('J021', 'F011', 'S007', '10:00:00', '12:00:00', '2D', '2025-05-27'),
+('J022', 'F012', 'S007', '12:30:00', '14:22:00', '2D', '2025-05-27'),
+('J023', 'F013', 'S008', '11:00:00', '12:47:00', '2D', '2025-05-27'),
+('J024', 'F014', 'S008', '13:00:00', '14:50:00', '2D', '2025-05-27'),
+('J025', 'F015', 'S009', '10:00:00', '11:38:00', '2D', '2025-05-27'),
+('J026', 'F001', 'S001', '18:00:00', '21:01:00', '2D', '2025-05-27'), -- Second showing of F001 on the same day
+('J027', 'F003', 'S002', '16:00:00', '18:32:00', '2D', '2025-05-27'),
+('J028', 'F006', 'S004', '16:00:00', '18:49:00', 'IMAX', '2025-05-27'),
+('J029', 'F016', 'S010', '10:30:00', '12:33:00', '2D', '2025-05-27'),
+('J030', 'F017', 'S010', '13:00:00', '15:01:00', '2D', '2025-05-27');
+
+INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, ID_Film, ID_Studio, Jam_Mulai, Jam_Selesai, Format_Film, Tanggal_Tayang) VALUES
+('J031', 'F001', 'S011', '10:00:00', '13:01:00', '2D', '2025-05-29'),
+('J032', 'F002', 'S012', '14:00:00', '16:05:00', '2D', '2025-05-29'),
+('J033', 'F003', 'S013', '10:30:00', '13:02:00', '2D', '2025-05-29'),
+('J034', 'F004', 'S014', '13:30:00', '15:42:00', '2D', '2025-05-29'),
+('J035', 'F005', 'S015', '11:00:00', '13:22:00', '2D', '2025-05-29'),
+('J036', 'F006', 'S016', '10:00:00', '12:49:00', 'IMAX', '2025-05-29'),
+('J037', 'F007', 'S017', '13:00:00', '15:28:00', 'IMAX', '2025-05-29'),
+('J038', 'F008', 'S018', '11:00:00', '13:16:00', 'Dolby Atmos', '2025-05-29'),
+('J039', 'F009', 'S019', '10:00:00', '12:34:00', '2D', '2025-05-29'),
+('J040', 'F010', 'S020', '13:00:00', '15:02:00', '2D', '2025-05-29');
+
+INSERT INTO JADWAL_TAYANG (ID_Jadwal_Tayang, ID_Film, ID_Studio, Jam_Mulai, Jam_Selesai, Format_Film, Tanggal_Tayang) VALUES
+('J041', 'F020', 'S001', '16:00:00', '18:10:00', '2D', '2025-05-29'),
+('J042', 'F021', 'S002', '10:00:00', '11:57:00', '2D', '2025-05-30'),
+('J043', 'F022', 'S003', '12:00:00', '13:21:00', '2D', '2025-05-30'),
+('J044', 'F023', 'S004', '14:00:00', '15:40:00', 'IMAX', '2025-05-30'),
+('J045', 'F024', 'S005', '16:00:00', '17:28:00', 'Dolby Atmos', '2025-05-30'),
+('J046', 'F025', 'S006', '10:00:00', '11:42:00', '2D', '2025-05-31'),
+('J047', 'F026', 'S007', '12:00:00', '13:48:00', '2D', '2025-05-31'),
+('J048', 'F027', 'S008', '14:00:00', '15:47:00', '2D', '2025-05-31'),
+('J049', 'F028', 'S009', '16:00:00', '17:45:00', '2D', '2025-05-31'),
+('J050', 'F029', 'S010', '10:00:00', '11:40:00', '2D', '2025-06-01'),
+('J051', 'F030', 'S011', '12:00:00', '13:42:00', '2D', '2025-06-01'),
+('J052', 'F031', 'S012', '14:00:00', '15:57:00', '2D', '2025-06-01'),
+('J053', 'F032', 'S013', '16:00:00', '18:29:00', '2D', '2025-06-01'),
+('J054', 'F033', 'S014', '10:00:00', '12:35:00', '2D', '2025-06-02'),
+('J055', 'F034', 'S015', '12:00:00', '14:44:00', '2D', '2025-06-02'),
+('J056', 'F035', 'S016', '14:00:00', '16:00:00', '2D', '2025-06-02'),
+('J057', 'F036', 'S017', '10:00:00', '11:39:00', '2D', '2025-06-03'),
+('J058', 'F037', 'S018', '12:00:00', '14:08:00', '2D', '2025-06-03'),
+('J059', 'F038', 'S019', '14:00:00', '15:46:00', '2D', '2025-06-03'),
+('J060', 'F039', 'S020', '10:00:00', '11:44:00', '2D', '2025-06-04'),
+('J061', 'F040', 'S021', '12:00:00', '13:56:00', '2D', '2025-06-04'),
+('J062', 'F041', 'S022', '14:00:00', '16:07:00', '2D', '2025-06-04'),
+('J063', 'F042', 'S023', '10:00:00', '12:27:00', '2D', '2025-06-05'),
+('J064', 'F043', 'S024', '12:00:00', '14:10:00', '2D', '2025-06-05'),
+('J065', 'F044', 'S025', '14:00:00', '16:19:00', '2D', '2025-06-05');
+
+INSERT INTO KURSI (ID_Kursi, ID_Studio, Nomor_Kursi, Status_Kursi) VALUES
+('K001', 'S001', 'A1', 'Available'), ('K002', 'S001', 'A2', 'Available'), ('K003', 'S001', 'A3', 'Available'),
+('K004', 'S001', 'A4', 'Available'), ('K005', 'S001', 'A5', 'Available'), ('K006', 'S001', 'A6', 'Available'),
+('K007', 'S001', 'A7', 'Available'), ('K008', 'S001', 'A8', 'Available'), ('K009', 'S001', 'A9', 'Available'),
+('K010', 'S001', 'A10', 'Available'), ('K011', 'S001', 'B1', 'Available'), ('K012', 'S001', 'B2', 'Available'),
+('K013', 'S001', 'B3', 'Available'), ('K014', 'S001', 'B4', 'Available'), ('K015', 'S001', 'B5', 'Available'),
+('K016', 'S001', 'B6', 'Available'), ('K017', 'S001', 'B7', 'Available'), ('K018', 'S001', 'B8', 'Available'),
+('K019', 'S001', 'B9', 'Available'), ('K020', 'S001', 'B10', 'Available'), ('K021', 'S001', 'C1', 'Available'),
+('K022', 'S001', 'C2', 'Available'), ('K023', 'S001', 'C3', 'Available'), ('K024', 'S001', 'C4', 'Available'),
+('K025', 'S001', 'C5', 'Available'), ('K026', 'S001', 'C6', 'Available'), ('K027', 'S001', 'C7', 'Available'),
+('K028', 'S001', 'C8', 'Available'), ('K029', 'S001', 'C9', 'Available'), ('K030', 'S001', 'C10', 'Available'),
+('K031', 'S002', 'A1', 'Available'), ('K032', 'S002', 'A2', 'Available'), ('K033', 'S002', 'A3', 'Available'),
+('K034', 'S002', 'A4', 'Available'), ('K035', 'S002', 'A5', 'Available'), ('K036', 'S002', 'A6', 'Available'),
+('K037', 'S002', 'A7', 'Available'), ('K038', 'S002', 'A8', 'Available'), ('K039', 'S002', 'A9', 'Available'),
+('K040', 'S002', 'A10', 'Available'), ('K041', 'S002', 'B1', 'Available'), ('K042', 'S002', 'B2', 'Available'),
+('K043', 'S002', 'B3', 'Available'), ('K044', 'S002', 'B4', 'Available'), ('K045', 'S002', 'B5', 'Available'),
+('K046', 'S002', 'B6', 'Available'), ('K047', 'S002', 'B7', 'Available'), ('K048', 'S002', 'B8', 'Available'),
+('K049', 'S002', 'B9', 'Available'), ('K050', 'S002', 'B10', 'Available');
+
+INSERT INTO TRANSAKSI (ID_Transaksi, ID_User, Metode_Bayar, Status_Bayar, Diskon, Total_Bayar, Tanggal_Transaksi, Waktu_Transaksi) VALUES
+('T001', 'U001', 'E-Wallet', 'Paid', 0.00, 80000.00, '2025-05-26 10:30:00', '10:30:00'),
+('T002', 'U002', 'Credit Card', 'Paid', 0.00, 40000.00, '2025-05-26 11:00:00', '11:00:00'),
+('T003', 'U003', 'Bank Transfer', 'Paid', 5000.00, 115000.00, '2025-05-26 12:00:00', '12:00:00'), -- 3 tickets @ 40k = 120k - 5k diskon
+('T004', 'U004', 'E-Wallet', 'Paid', 0.00, 40000.00, '2025-05-26 13:00:00', '13:00:00'),
+('T005', 'U005', 'Credit Card', 'Paid', 0.00, 80000.00, '2025-05-26 14:00:00', '14:00:00'),
+('T006', 'U006', 'Bank Transfer', 'Pending', 0.00, 40000.00, '2025-05-26 15:00:00', '15:00:00'),
+('T007', 'U007', 'E-Wallet', 'Paid', 0.00, 120000.00, '2025-05-26 16:00:00', '16:00:00'),
+('T008', 'U008', 'Credit Card', 'Paid', 0.00, 40000.00, '2025-05-26 17:00:00', '17:00:00'),
+('T009', 'U009', 'Bank Transfer', 'Paid', 10000.00, 110000.00, '2025-05-26 18:00:00', '18:00:00'), -- 3 tickets @ 40k = 120k - 10k diskon
+('T010', 'U010', 'E-Wallet', 'Paid', 0.00, 40000.00, '2025-05-26 19:00:00', '19:00:00');
+
+INSERT INTO TRANSAKSI (ID_Transaksi, ID_User, Metode_Bayar, Status_Bayar, Diskon, Total_Bayar, Tanggal_Transaksi, Waktu_Transaksi) VALUES
+('T011', 'U011', 'Credit Card', 'Paid', 0.00, 80000.00, '2025-05-26 20:00:00', '20:00:00'),
+('T012', 'U012', 'Bank Transfer', 'Paid', 0.00, 40000.00, '2025-05-26 21:00:00', '21:00:00'),
+('T013', 'U013', 'E-Wallet', 'Paid', 0.00, 40000.00, '2025-05-27 09:00:00', '09:00:00'),
+('T014', 'U014', 'Credit Card', 'Paid', 0.00, 80000.00, '2025-05-27 10:00:00', '10:00:00'),
+('T015', 'U015', 'Bank Transfer', 'Paid', 0.00, 40000.00, '2025-05-27 11:00:00', '11:00:00'),
+('T016', 'U016', 'E-Wallet', 'Pending', 0.00, 40000.00, '2025-05-27 12:00:00', '12:00:00'),
+('T017', 'U017', 'Credit Card', 'Paid', 0.00, 120000.00, '2025-05-27 13:00:00', '13:00:00'),
+('T018', 'U018', 'Bank Transfer', 'Paid', 0.00, 40000.00, '2025-05-27 14:00:00', '14:00:00'),
+('T019', 'U019', 'E-Wallet', 'Paid', 0.00, 40000.00, '2025-05-27 15:00:00', '15:00:00'),
+('T020', 'U020', 'Credit Card', 'Paid', 0.00, 80000.00, '2025-05-27 16:00:00', '16:00:00');
+
+INSERT INTO TRANSAKSI (ID_Transaksi, ID_User, Metode_Bayar, Status_Bayar, Diskon, Total_Bayar, Tanggal_Transaksi, Waktu_Transaksi) VALUES
+('T021', 'U021', 'E-Wallet', 'Paid', 0.00, 40000.00, '2025-05-27 17:00:00', '17:00:00'),
+('T022', 'U022', 'Credit Card', 'Paid', 0.00, 80000.00, '2025-05-27 18:00:00', '18:00:00'),
+('T023', 'U023', 'Bank Transfer', 'Paid', 0.00, 120000.00, '2025-05-27 19:00:00', '19:00:00'),
+('T024', 'U024', 'E-Wallet', 'Paid', 0.00, 40000.00, '2025-05-27 20:00:00', '20:00:00'),
+('T025', 'U025', 'Credit Card', 'Paid', 0.00, 80000.00, '2025-05-27 21:00:00', '21:00:00');
+
+INSERT INTO TIKET (ID_Tiket, ID_Transaksi, ID_Jadwal_Tayang, ID_Kursi, Harga_Tiket) VALUES
+('TKT001', 'T001', 'J001', 'K001', 40000.00), -- U001, J001 (F001, S001), K001
+('TKT002', 'T001', 'J001', 'K002', 40000.00), -- U001, J001 (F001, S001), K002 (2 tickets for T001)
+('TKT003', 'T002', 'J002', 'K003', 40000.00), -- U002, J002 (F002, S001), K003 (1 ticket for T002)
+('TKT004', 'T003', 'J003', 'K031', 40000.00), -- U003, J003 (F003, S002), K031
+('TKT005', 'T003', 'J003', 'K032', 40000.00), -- U003, J003 (F003, S002), K032
+('TKT006', 'T003', 'J003', 'K033', 35000.00), -- U003, J003 (F003, S002), K033 (discounted for total_bayar T003)
+('TKT007', 'T004', 'J004', 'K034', 40000.00), -- U004, J004 (F004, S002), K034
+('TKT008', 'T005', 'J005', 'K021', 40000.00), -- U005, J005 (F005, S003), K021
+('TKT009', 'T005', 'J005', 'K022', 40000.00), -- U005, J005 (F005, S003), K022
+('TKT010', 'T006', 'J006', 'K004', 60000.00); -- U006, J0
+
+INSERT INTO TIKET (ID_Tiket, ID_Transaksi, ID_Jadwal_Tayang, ID_Kursi, Harga_Tiket) VALUES
+('TKT011', 'T007', 'J007', 'K005', 60000.00),
+('TKT012', 'T007', 'J007', 'K006', 60000.00),
+('TKT013', 'T007', 'J007', 'K007', 60000.00),
+('TKT014', 'T008', 'J008', 'K008', 50000.00),
+('TKT015', 'T009', 'J009', 'K009', 40000.00),
+('TKT016', 'T009', 'J009', 'K010', 40000.00),
+('TKT017', 'T009', 'J009', 'K011', 30000.00),
+('TKT018', 'T010', 'J010', 'K012', 40000.00),
+('TKT019', 'T011', 'J011', 'K013', 40000.00),
+('TKT020', 'T011', 'J011', 'K014', 40000.00),
+('TKT021', 'T012', 'J012', 'K015', 40000.00),
+('TKT022', 'T013', 'J013', 'K035', 40000.00),
+('TKT023', 'T014', 'J014', 'K036', 40000.00),
+('TKT024', 'T014', 'J014', 'K037', 40000.00),
+('TKT025', 'T015', 'J015', 'K023', 40000.00),
+('TKT026', 'T016', 'J016', 'K024', 60000.00),
+('TKT027', 'T017', 'J017', 'K025', 60000.00),
+('TKT028', 'T017', 'J017', 'K026', 60000.00),
+('TKT029', 'T017', 'J017', 'K027', 60000.00),
+('TKT030', 'T018', 'J018', 'K028', 50000.00);
+
+INSERT INTO TIKET (ID_Tiket, ID_Transaksi, ID_Jadwal_Tayang, ID_Kursi, Harga_Tiket) VALUES
+('TKT031', 'T001', 'J026', 'K005', 40000.00), -- Same transaction, different show
+('TKT032', 'T002', 'J011', 'K004', 40000.00),
+('TKT033', 'T003', 'J013', 'K035', 40000.00),
+('TKT034', 'T004', 'J014', 'K036', 40000.00),
+('TKT035', 'T005', 'J015', 'K025', 40000.00),
+('TKT036', 'T006', 'J016', 'K006', 60000.00),
+('TKT037', 'T007', 'J017', 'K007', 60000.00),
+('TKT038', 'T008', 'J018', 'K008', 50000.00),
+('TKT039', 'T009', 'J019', 'K009', 40000.00),
+('TKT040', 'T010', 'J020', 'K010', 40000.00),
+('TKT041', 'T011', 'J021', 'K011', 40000.00),
+('TKT042', 'T012', 'J022', 'K012', 40000.00),
+('TKT043', 'T013', 'J023', 'K038', 40000.00),
+('TKT044', 'T014', 'J024', 'K039', 40000.00),
+('TKT045', 'T015', 'J025', 'K029', 40000.00);
